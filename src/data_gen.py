@@ -42,11 +42,11 @@ def get_pos_images(n, dir_name='src/sunsets'):
 			pass
 		i += 1
 	# return data w pos labels
-	return [(img_vec, torch.tensor(1, dtype=torch.float)) for img_vec in img_vecs]
+	return [(img_vec, torch.tensor([1], dtype=torch.float)) for img_vec in img_vecs]
 
 def get_neg_images(n):
 	# return rand imgs w neg labels
-	return [(torch.randn(3, 256, 256), torch.tensor(0, dtype=torch.float)) for _ in range(n)]
+	return [(torch.randn(3, 256, 256), torch.tensor([0], dtype=torch.float)) for _ in range(n)]
 
 
 # helpers for get_pos_images()
