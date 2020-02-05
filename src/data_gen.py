@@ -7,7 +7,7 @@ import os
 import sys
 sys.path.append('/Users/joe/img_gen/src')
 
-def get_data(n=100):
+def get_data(n=1000):
 	pos_images = get_pos_images(n//2)
 	neg_images = get_neg_images(len(pos_images))
 	images = neg_images+pos_images
