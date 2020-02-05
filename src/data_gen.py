@@ -11,8 +11,17 @@ def get_data(n=1000):
 	pos_images = get_pos_images(n//2)
 	neg_images = get_neg_images(len(pos_images))
 	images = neg_images+pos_images
-	shuffle(images)
-	return images
+	# mix up images
+	indices = [i for i in range(len(images))]
+	shuffle(indices)
+	features, labels = [], []
+	for j in range(len(indices)):
+		i = indices[j]
+		feature, label = images[i]
+		features.append(feature)
+		labels.append(label)
+
+	return torch.stack(features), torch.stack(labels)
 
 # HELPERS for get_data()
 
