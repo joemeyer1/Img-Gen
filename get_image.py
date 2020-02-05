@@ -8,7 +8,7 @@ from PIL import Image
 from src.improve_img import improve
 
 
-def gen(net_filename='net.pickle', img_filename='image'):
+def gen(epochs=500, net_filename='net.pickle', img_filename='image'):
 
 	# get net
 	with open(net_filename, 'rb') as f:
@@ -16,7 +16,7 @@ def gen(net_filename='net.pickle', img_filename='image'):
 	# get rand noise
 	noise_img = torch.randn(1, 3, 256, 256)
 	# improve it
-	improved_img = improve(noise_img, net, 5)
+	improved_img = improve(noise_img, net, epochs)
 	# make it an imgae
 	# try:
 	img_vec = format(improved_img[0]).detach().numpy()
@@ -25,8 +25,7 @@ def gen(net_filename='net.pickle', img_filename='image'):
 	im = Image.fromarray(img_vec, 'RGB')
 	im.show()
 	# save it
-	with open(img_filename, 'wb') as f:
-		pickle.dump(im, f)
+	im.save(img_filename)
 
 
 
