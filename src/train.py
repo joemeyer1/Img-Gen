@@ -11,8 +11,6 @@ def train_net(net, data, epochs=1000):
 	with tqdm(range(epochs)) as t:
 		for i in t:
 			try:
-				# track epoch loss
-				tot_loss = 0
 				features, labels = data
 				# prepare for backprop
 				optimizer.zero_grad()
@@ -26,9 +24,7 @@ def train_net(net, data, epochs=1000):
 				# update weights
 				optimizer.step()
 				# report loss
-				tot_loss += loss.item()
-				# report loss
-				avg_loss = tot_loss / float(len(data))
+				avg_loss = loss.item() / float(len(features))
 				t.write(" Epoch {} Avg Loss: {}\n".format(i, avg_loss))
 			except:
 				print("Interrupted.")
