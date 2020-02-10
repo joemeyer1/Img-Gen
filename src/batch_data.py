@@ -14,6 +14,7 @@ def batch(data, batch_size):
 			feature, label = feats[i], labs[i]
 			features.append(feature)
 			labels.append(label)
+		features, labels = torch.stack(features), torch.stack(labels)
 		batches.append((features, labels))
 	return batches
 

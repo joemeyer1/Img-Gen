@@ -7,9 +7,9 @@ import os
 import sys
 sys.path.append('/Users/joe/img_gen/src')
 
-def get_data(n=1000):
+def get_data(n=100000):
 	pos_images = get_pos_images(n)
-	neg_images = get_neg_images(n//4, 'g') + get_neg_images(n//4, 'b') + get_neg_images(n//4, 'r', 100) + [(torch.randn(3, 256, 256), torch.tensor([0], dtype=torch.float)) for _ in range(n//4)]
+	neg_images = get_neg_images(n//4, 'g') + get_neg_images(n//4, 'b') + get_neg_images(n//4, 'r', 100) + [(torch.randn(3, 256, 256), torch.tensor([0], dtype=torch.float))]*(n//4)
 	images = neg_images+pos_images
 	# mix up images
 	indices = [i for i in range(len(images))]
