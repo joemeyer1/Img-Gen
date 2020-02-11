@@ -4,15 +4,17 @@ import torch
 from tqdm import tqdm
 from src.batch_data import batch as get_batches
 
-def train_net(net, data, epochs=1000, batch_size = 100):
+def train_net(net, data, epochs=1000, batch_size = 100, verbose=False):
 
 	# train net
 	loss_fn = torch.nn.MSELoss()
-	optimizer = torch.optim.Adam(net.parameters(), lr=0.0001)
-	with tqdm(range(epochs)) as epoch_counter:
+	optimizer = torch.optim.Adam(net.parameters(), lr=0.01)
+	with tqdm(range(epochs), desc='0') as epoch_counter:
 		for epoch in epoch_counter:
 			tot_batch_loss = 0
-			for batch in get_batches(data, batch_size):
+			batches = get_batches(data, batch_size)
+			for batch_i in range(len(batches)):
+				batch = batches[batch_i]
 				try:
 					features, labels = batch
 					# prepare for backprop
@@ -28,6 +30,11 @@ def train_net(net, data, epochs=1000, batch_size = 100):
 					optimizer.step()
 					# report loss
 					tot_batch_loss += loss.item()
+					if verbose and batch_i > 0:
+						running_loss = tot_batch_loss / float(batch_i) 
+						epoch_counter.desc = str(running_loss)
+						epoch_counter.refresh()
+						# epoch_counter.write("\t Epoch {} Running Loss: {}\n".format(epoch, running_loss))
 				except:
 					print("Interrupted.")
 					return net
