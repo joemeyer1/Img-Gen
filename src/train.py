@@ -4,11 +4,11 @@ import torch
 from tqdm import tqdm
 from src.batch_data import batch as get_batches
 
-def train_net(net, data, epochs=1000, batch_size = 100, verbose=False):
+def train_net(net, data, epochs=1000, batch_size = 100, verbose=True):
 
 	# train net
 	loss_fn = torch.nn.MSELoss()
-	optimizer = torch.optim.Adam(net.parameters(), lr=0.01)
+	optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
 	with tqdm(range(epochs), desc='0') as epoch_counter:
 		for epoch in epoch_counter:
 			tot_batch_loss = 0
@@ -20,8 +20,8 @@ def train_net(net, data, epochs=1000, batch_size = 100, verbose=False):
 					# prepare for backprop
 					optimizer.zero_grad()
 					# compute prediction
-					output = net(features)
-					# print("out: {}\n\tlabel: {}\n".format(output, label))
+					output = torch.sigmoid(net(features))
+					# print("out: {}\n\tlabel: {}\n".format(output, labels))
 					# compute loss
 					loss = loss_fn(output, labels)
 					# compute loss gradient
@@ -31,7 +31,7 @@ def train_net(net, data, epochs=1000, batch_size = 100, verbose=False):
 					# report loss
 					tot_batch_loss += loss.item()
 					if verbose and batch_i > 0:
-						running_loss = tot_batch_loss / float(batch_i) 
+						running_loss = tot_batch_loss / (float(batch_i+1)*batch_size)
 						epoch_counter.desc = str(running_loss)
 						epoch_counter.refresh()
 						# epoch_counter.write("\t Epoch {} Running Loss: {}\n".format(epoch, running_loss))
@@ -39,7 +39,7 @@ def train_net(net, data, epochs=1000, batch_size = 100, verbose=False):
 					print("Interrupted.")
 					return net
 			# report loss
-			avg_loss = tot_batch_loss / float(batch_size)
+			avg_loss = tot_batch_loss / float(len(batches)*batch_size)
 			epoch_counter.write(" Epoch {} Avg Loss: {}\n".format(epoch, avg_loss))
 	print('\n')
 	return net

@@ -8,12 +8,14 @@ class Classifier(nn.Module):
 
 		self.net = nn.Sequential(
 			LinearBlock(3*256*256, 256),
+			# LinearBlock(256, 64),
 			# LinearBlock(256, 256),
 			# LinearBlock(256, 128),
 			# LinearBlock(128, 64),
 			# LinearBlock(64,1),
-			LinearBlock(256, 1),
-			nn.Sigmoid()
+			# LinearBlock(256, 1),
+			nn.Linear(256, 1),
+			# nn.Sigmoid()
 		)
 
 	def forward(self, x):

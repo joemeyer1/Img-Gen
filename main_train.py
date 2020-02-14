@@ -2,9 +2,13 @@
 # pickle used for saving/loading net
 import pickle
 import fire
+import torch
+from numpy.random import shuffle
+from random import randint
 
 # import train libs
-from src.cnn_classifier import CNNClassifier
+# from src.cnn_classifier import CNNClassifier
+from src.classifier import Classifier as CNNClassifier
 from src.data_gen_toy import get_data
 from src.train import train_net
 
@@ -19,10 +23,10 @@ def train_img_net(use_old=False, filename='net.pickle'):
 	net = get_net(use_old, filename)
 	# get data [(tensor(image/non-image), tensor(P(image)), ... ]
 	print("Getting Data...")
-	data = get_data(10)
+	data = get_data(1000)
 	# train net on data
 	print("Training Net...")
-	net = train_net(net, data, 1000)
+	net = train_net(net, data, epochs=1000, batch_size=100, verbose=True)
 	# save net
 	with open(filename, 'wb') as f:
 		pickle.dump(net, f)
@@ -50,5 +54,8 @@ def get_net(use_old, filename):
 		net = CNNClassifier()
 
 	return net
+
+
+
 
 fire.Fire(main)

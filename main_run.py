@@ -1,4 +1,4 @@
-
+ 
 # pickle used for saving/loading net
 import pickle
 import torch
@@ -9,14 +9,20 @@ from PIL import Image
 # import gen libs
 from src.improve_img import improve
 
-start_img_fn = lambda : uniform(127)
+# start_img_fn = lambda : uniform(127)
+start_img_fn = lambda n : random_im(n)
 
 def main(epochs=500, net_filename='net.pickle', img_filename='image.jpg', u_val=127, start_img_fn=start_img_fn):
 	net = get_net(net_filename)
-	img = start_img_fn()
-	img = improve(img, net, epochs)
-	img = format(img[0])
+	img = start_img_fn(10)
+	print("old: {}\n\n".format(format(img[0])[:10]))
+	print("\tnet(old): {}".format(net(img)))
+	img_vec = improve(img, net, epochs,verbose=True)
+	img = format(img_vec[0])
 	save_img(img, img_filename)
+	print("new: {}\n\n\n\n\n".format(img[:10]))
+	print("\tnet(new): {}".format(net(img_vec)))
+	# return img
 
 
 def format(img, n=256):
@@ -25,6 +31,9 @@ def format(img, n=256):
 
 def uniform(val=127):
 	return torch.ones(1, 3, 256, 256)*val
+
+def random_im(n=1):
+	return torch.rand(n,3,256,256)*255
 
 
 def get_net(net_filename):

@@ -2,7 +2,7 @@
 from torch import nn
 
 class CNN(nn.Module):
-	def __init__(self, shape = [3, 1]):
+	def __init__(self, shape = [3]):
 		super(CNN, self).__init__()
 
 		self.net = nn.Sequential()
