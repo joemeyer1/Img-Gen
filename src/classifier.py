@@ -10,6 +10,7 @@ class Classifier(nn.Module):
 			LinearBlock(3*256*256, 256),
 			# LinearBlock(256, 64),
 			LinearBlock(256, 256),
+			LinearBlock(256, 256),
 			# LinearBlock(256, 64),
 			# LinearBlock(128, 64),
 			# LinearBlock(64,1),

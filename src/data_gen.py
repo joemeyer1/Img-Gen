@@ -26,7 +26,7 @@ def get_data(n=1000):
 
 # HELPERS for get_data()
 
-def get_pos_images(n, dir_name='src/sunsets'):
+def get_image_data(n, dir_name='src/sunsets', label=1):
 	fnames = os.listdir(dir_name)
 	img_vecs = []
 	i = 0
@@ -43,11 +43,22 @@ def get_pos_images(n, dir_name='src/sunsets'):
 			pass
 		i += 1
 	# return data w pos labels
-	return [(img_vec, torch.tensor([1], dtype=torch.float)) for img_vec in img_vecs]
+	return [(img_vec, torch.tensor([label], dtype=torch.float)) for img_vec in img_vecs]
 
-def get_neg_images(n):
+def get_neg_images_rand(n):
 	# return rand imgs w neg labels
 	return [((torch.rand(3, 256, 256)*255).int().float(), torch.tensor([0], dtype=torch.float)) for _ in range(n)]
+
+
+def get_neg_images(n):
+	# return gen'd images w neg labels
+	images = get_image_data(n, 'generated_images', 0)
+	return images*max(1, n//len(images))
+
+
+def get_pos_images(n, dir_name='src/sunsets'):
+	return get_image_data(n, 'src/sunsets', 1)
+
 
 
 # helpers for get_pos_images()

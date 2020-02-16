@@ -31,7 +31,7 @@ def train_net(net, data, epochs=1000, batch_size = 100, verbose=True, lr=.001):
 					# report loss
 					tot_batch_loss += loss.item()
 					if verbose and batch_i > 0:
-						running_loss = tot_batch_loss / (float(batch_i+1)*batch_size)
+						running_loss = tot_batch_loss / float(batch_i+1)
 						epoch_counter.desc = str(running_loss)
 						epoch_counter.refresh()
 						# epoch_counter.write("\t Epoch {} Running Loss: {}\n".format(epoch, running_loss))
@@ -39,7 +39,7 @@ def train_net(net, data, epochs=1000, batch_size = 100, verbose=True, lr=.001):
 					print("Interrupted.")
 					return net
 			# report loss
-			avg_loss = tot_batch_loss / float(len(batches)*batch_size)
+			avg_loss = tot_batch_loss / float(len(batches))
 			epoch_counter.write(" Epoch {} Avg Loss: {}\n".format(epoch, avg_loss))
 	print('\n')
 	return net
