@@ -5,9 +5,9 @@ def improve(image, net, epochs, verbose=True):
 	# improve image
 
 	image = torch.nn.Parameter(image)
-	optimizer = torch.optim.Adam({image}, lr=1)
+	optimizer = torch.optim.Adam({image}, lr=10, amsgrad=True)
 	loss_fn = torch.nn.MSELoss()
-	pos_label = torch.tensor([[1]]*len(image), dtype=torch.float)
+	pos_label = torch.tensor([[1*10000]]*len(image), dtype=torch.float)
 	for _ in range(epochs):
 		try:
 			# prepare for backprop

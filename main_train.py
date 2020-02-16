@@ -7,15 +7,16 @@ from numpy.random import shuffle
 from random import randint
 
 # import train libs
-# from src.cnn_classifier import CNNClassifier
-from src.classifier import Classifier as CNNClassifier
-from src.data_gen_toy import get_data
+from src.cnn_classifier import CNNClassifier
+# from src.classifier import Classifier as CNNClassifier
+# from src.data_gen_toy import get_data
+from src.data_gen import get_data
 from src.train import train_net
 
 
-def main():
+def main(use_old=False, filename='net-sunset.pickle'):
 	global net
-	net = train_img_net()
+	net = train_img_net(use_old, filename)
 
 def train_img_net(use_old=False, filename='net.pickle'):
 	# get net
@@ -26,7 +27,10 @@ def train_img_net(use_old=False, filename='net.pickle'):
 	data = get_data(1000)
 	# train net on data
 	print("Training Net...")
-	net = train_net(net, data, epochs=1000, batch_size=100, verbose=True)
+	lr = .0001
+	if 'sunset' not in filename:
+		lr *= 10
+	net = train_net(net, data, epochs=1000, batch_size=100, verbose=True, lr=lr)
 	# save net
 	with open(filename, 'wb') as f:
 		pickle.dump(net, f)

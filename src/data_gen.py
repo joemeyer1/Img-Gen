@@ -5,6 +5,7 @@ from numpy.random import shuffle
 from PIL import Image
 import os
 import sys
+import random
 sys.path.append('/Users/joe/img_gen/src')
 
 def get_data(n=1000):
@@ -46,7 +47,7 @@ def get_pos_images(n, dir_name='src/sunsets'):
 
 def get_neg_images(n):
 	# return rand imgs w neg labels
-	return [(torch.randn(3, 256, 256), torch.tensor([0], dtype=torch.float)) for _ in range(n)]
+	return [((torch.rand(3, 256, 256)*255).int().float(), torch.tensor([0], dtype=torch.float)) for _ in range(n)]
 
 
 # helpers for get_pos_images()

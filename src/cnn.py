@@ -2,7 +2,7 @@
 from torch import nn
 
 class CNN(nn.Module):
-	def __init__(self, shape = [3]):
+	def __init__(self, shape = [3,3,3,1]):
 		super(CNN, self).__init__()
 
 		self.net = nn.Sequential()
@@ -43,7 +43,7 @@ class ConvBlock(nn.Module):
 		)
 
 		self.block = nn.Sequential(
-						nn.Dropout(),
+						# nn.Dropout(),
 						conv_layer,
 						nn.ReLU(),
 						pool_layer

@@ -12,7 +12,7 @@ from src.improve_img import improve
 start_img_fn = lambda n : uniform(n, 127)
 # start_img_fn = lambda n : random_im(n)
 
-def main(epochs=500, net_filename='net.pickle', img_filename='image', u_val=127, start_img_fn=start_img_fn):
+def main(epochs=500, net_filename='net-sunset.pickle', img_filename='image', u_val=127, start_img_fn=start_img_fn):
 	n = 10
 	net = get_net(net_filename)
 	img = start_img_fn(n)

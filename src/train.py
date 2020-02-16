@@ -4,11 +4,11 @@ import torch
 from tqdm import tqdm
 from src.batch_data import batch as get_batches
 
-def train_net(net, data, epochs=1000, batch_size = 100, verbose=True):
+def train_net(net, data, epochs=1000, batch_size = 100, verbose=True, lr=.001):
 
 	# train net
 	loss_fn = torch.nn.MSELoss()
-	optimizer = torch.optim.Adam(net.parameters(), lr=0.001)
+	optimizer = torch.optim.Adam(net.parameters(), lr=lr)
 	with tqdm(range(epochs), desc='0') as epoch_counter:
 		for epoch in epoch_counter:
 			tot_batch_loss = 0
