@@ -5,7 +5,7 @@ from src.cnn import CNN
 from src.classifier import Classifier
 
 class CNNClassifier(nn.Module):
-	def __init__(self, depth=3):
+	def __init__(self):
 		super(CNNClassifier, self).__init__()
 
 		self.net = nn.Sequential(

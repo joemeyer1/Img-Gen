@@ -5,14 +5,24 @@ from numpy.random import shuffle
 from PIL import Image
 import os
 import sys
+import random
 sys.path.append('/Users/joe/img_gen/src')
 
 def get_data(n=1000):
 	pos_images = get_pos_images(n//2)
 	neg_images = get_neg_images(len(pos_images))
 	images = neg_images+pos_images
-	shuffle(images)
-	return images
+	# mix up images
+	indices = [i for i in range(len(images))]
+	shuffle(indices)
+	features, labels = [], []
+	for j in range(len(indices)):
+		i = indices[j]
+		feature, label = images[i]
+		features.append(feature)
+		labels.append(label)
+
+	return torch.stack(features), torch.stack(labels)
 
 # HELPERS for get_data()
 
@@ -33,11 +43,11 @@ def get_pos_images(n, dir_name='src/sunsets'):
 			pass
 		i += 1
 	# return data w pos labels
-	return [(img_vec, torch.tensor(1, dtype=torch.float)) for img_vec in img_vecs]
+	return [(img_vec, torch.tensor([1], dtype=torch.float)) for img_vec in img_vecs]
 
 def get_neg_images(n):
 	# return rand imgs w neg labels
-	return [(torch.randn(3, 256, 256), torch.tensor(0, dtype=torch.float)) for _ in range(n)]
+	return [((torch.rand(3, 256, 256)*255).int().float(), torch.tensor([0], dtype=torch.float)) for _ in range(n)]
 
 
 # helpers for get_pos_images()
