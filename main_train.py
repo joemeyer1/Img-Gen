@@ -63,5 +63,5 @@ def get_net(use_old, filename):
 
 
 
-
-fire.Fire(main)
+if __name__ == '__main__':
+	fire.Fire(main)

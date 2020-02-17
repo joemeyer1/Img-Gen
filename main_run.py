@@ -53,8 +53,8 @@ def save_img(img_vec, img_filename):
 	# save it
 	im.save(img_filename)
 
-
-fire.Fire(main)
+if __name__ == '__main__':
+	fire.Fire(main)
 
 # def gen(epochs=500, net_filename='net.pickle', img_filename='image.jpg'):
 
