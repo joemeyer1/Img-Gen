@@ -14,6 +14,7 @@ start_img_fn = lambda n, u_val : uniform(n, u_val)
 
 def main(epochs=500, net_filename='net-sunset.pickle', img_filename='image', u_val=127, start_img_fn=start_img_fn, n=10):
 	n = int(n)
+	epochs = int(epochs)
 	net = get_net(net_filename)
 	img = start_img_fn(n, int(u_val))
 	print("old: {}\n\n".format(format(img[0])[:10]))

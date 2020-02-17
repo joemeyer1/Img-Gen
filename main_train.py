@@ -14,26 +14,27 @@ from src.data_gen import get_data
 from src.train import train_net
 
 
-def main(use_old=False, filename='net-sunset.pickle'):
+def main(use_old=False, save_net_as='net-sunset-2-16.pickle', get_net_from='net-sunset.pickle'):
+	# pass None for get_net_from to make a new net.
 	use_old = bool(use_old)
 	global net
-	net = train_img_net(use_old, filename)
+	net = train_img_net(use_old, save_net_as, get_net_from)
 
-def train_img_net(use_old=False, filename='net.pickle'):
+def train_img_net(use_old=False, save_net_as='net-sunset-2-16.pickle', get_net_from='net-sunset.pickle'):
 	# get net
 	print("Getting Net...")
-	net = get_net(use_old, filename)
+	net = get_net(use_old, get_net_from)
 	# get data [(tensor(image/non-image), tensor(P(image)), ... ]
 	print("Getting Data...")
 	data = get_data(1000)
 	# train net on data
 	print("Training Net...")
 	lr = .0001
-	if 'sunset' not in filename:
-		lr *= 10
+	# if 'sunset' not in get_net_from:
+	# 	lr *= 10
 	net = train_net(net, data, epochs=1000, batch_size=100, verbose=True, lr=lr)
 	# save net
-	with open(filename, 'wb') as f:
+	with open(save_net_as, 'wb') as f:
 		pickle.dump(net, f)
 
 
