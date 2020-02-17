@@ -9,8 +9,10 @@ import random
 sys.path.append('/Users/joe/img_gen/src')
 
 def get_data(n=1000):
-	pos_images = get_pos_images(n//2)
-	neg_images = get_neg_images(len(pos_images))
+	print("\tgetting neg data...")
+	neg_images = get_neg_images(n)
+	print("\tgetting pos data...")
+	pos_images = get_pos_images(len(neg_images))
 	images = neg_images+pos_images
 	# mix up images
 	indices = [i for i in range(len(images))]
@@ -54,6 +56,11 @@ def get_neg_images(n):
 	# return gen'd images w neg labels
 	images = get_image_data(n, 'generated_images', 0)
 	return images*max(1, n//len(images))
+
+# def get_neg_images(n):
+# 	# return gen'd images w neg labels
+# 	images = get_image_data(n//2, 'generated_images', 0)+get_neg_images_rand(n//2)
+# 	return images*max(1, n//len(images))
 
 
 def get_pos_images(n, dir_name='src/sunsets'):

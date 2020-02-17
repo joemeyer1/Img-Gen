@@ -15,6 +15,7 @@ from src.train import train_net
 
 
 def main(use_old=False, filename='net-sunset.pickle'):
+	use_old = bool(use_old)
 	global net
 	net = train_img_net(use_old, filename)
 

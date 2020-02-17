@@ -9,13 +9,13 @@ from PIL import Image
 # import gen libs
 from src.improve_img import improve
 
-start_img_fn = lambda n : uniform(n, 127)
-# start_img_fn = lambda n : random_im(n)
+start_img_fn = lambda n, u_val : uniform(n, u_val)
+# start_img_fn = lambda n, u_val : random_im(n)
 
 def main(epochs=500, net_filename='net-sunset.pickle', img_filename='image', u_val=127, start_img_fn=start_img_fn, n=10):
 	n = int(n)
 	net = get_net(net_filename)
-	img = start_img_fn(n)
+	img = start_img_fn(n, int(u_val))
 	print("old: {}\n\n".format(format(img[0])[:10]))
 	print("\tnet(old): {}".format(net(img)))
 	img_vec = improve(img, net, epochs,verbose=True)
