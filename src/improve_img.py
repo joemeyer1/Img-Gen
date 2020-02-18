@@ -1,14 +1,15 @@
 
 import torch
+from PIL import Image
 
-def improve(image, net, epochs, verbose=True):
+def improve(image, net, epochs, verbose=True, show_every=20):
 	# improve image
 
 	image = torch.nn.Parameter(image)
 	optimizer = torch.optim.Adam({image}, lr=10, amsgrad=True)
 	loss_fn = torch.nn.MSELoss()
 	pos_label = torch.tensor([[1*10000]]*len(image), dtype=torch.float)
-	for _ in range(epochs):
+	for i in range(epochs):
 		try:
 			# prepare for backprop
 			optimizer.zero_grad()
@@ -23,6 +24,8 @@ def improve(image, net, epochs, verbose=True):
 			# report loss
 			if verbose:
 				print("Epoch Loss: {}".format(loss))
+				if i%show_every == 0:
+					show_image(image[0])
 		except:
 			print("Interrupted.")
 			return image
@@ -57,4 +60,12 @@ def test2(epochs=100, verbose=False):
 	print("net(image): {}".format(net(image)))
 	return image
 
+def show_image(img_vec):
+	img_vec = format(img_vec)
+	im = Image.new('RGB', (256,256))
+	im.putdata(img_vec)
+	im.show()
 
+def format(img, n=256):
+	r,g,b=(ch.int().flatten().tolist() for ch in img)
+	return [(r[i], g[i], b[i]) for i in range(n**2)]

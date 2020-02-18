@@ -8,11 +8,13 @@ from PIL import Image
 
 # import gen libs
 from src.improve_img import improve
+from src.data_gen import get_image_vec
 
-start_img_fn = lambda n, u_val : uniform(n, u_val)
-# start_img_fn = lambda n, u_val : random_im(n)
+# start_img_fn = lambda n, u_val : uniform(n, u_val)
+start_img_fn = lambda n, u_val : random_im(n)
+# start_img_fn = lambda n, u_val : get_image_vecs()
 
-def main(epochs=500, net_filename='net-sunset.pickle', img_filename='image', u_val=127, start_img_fn=start_img_fn, n=10):
+def main(epochs=10000, net_filename='net-sunset.pickle', img_filename='image', u_val=127, start_img_fn=start_img_fn, n=10):
 	n = int(n)
 	epochs = int(epochs)
 	net = get_net(net_filename)
@@ -52,6 +54,25 @@ def save_img(img_vec, img_filename):
 	im.show()
 	# save it
 	im.save(img_filename)
+
+def get_image_vecs(n=float('inf'), dir_name='recent'):
+	import os
+	fnames = os.listdir(dir_name)
+	img_vecs = []
+	i = 0
+	while n and i < len(fnames):
+		fname = fnames[i]
+		fpath = os.path.join(dir_name, fname)
+		try:
+			img_vec = get_image_vec(fpath)
+			img_vecs.append(img_vec)
+			n -= 1
+		except:
+			print("{} invalid.".format(fpath))
+			# image file invalid
+			pass
+		i += 1
+	return torch.stack(img_vecs)
 
 if __name__ == '__main__':
 	fire.Fire(main)
