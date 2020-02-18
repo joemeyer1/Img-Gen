@@ -8,11 +8,12 @@ import sys
 import random
 sys.path.append('/Users/joe/img_gen/src')
 
-def get_data(n=1000):
+def get_data(n=6000):
 	print("\tgetting neg data...")
 	neg_images = get_neg_images(n)
 	print("\tgetting pos data...")
 	pos_images = get_pos_images(len(neg_images))
+	del neg_images[len(pos_images):]
 	images = neg_images+pos_images
 	# mix up images
 	indices = [i for i in range(len(images))]
@@ -51,16 +52,18 @@ def get_neg_images_rand(n):
 	# return rand imgs w neg labels
 	return [((torch.rand(3, 256, 256)*255).int().float(), torch.tensor([0], dtype=torch.float)) for _ in range(n)]
 
-
-def get_neg_images(n):
-	# return gen'd images w neg labels
-	images = get_image_data(n, 'generated_images', 0)
-	return images*max(1, n//len(images))
+def get_neg_images_uniform(n, val=127):
+	return torch.ones(n, 3, 256, 256)*val
 
 # def get_neg_images(n):
 # 	# return gen'd images w neg labels
-# 	images = get_image_data(n//2, 'generated_images', 0)+get_neg_images_rand(n//2)
+# 	images = get_image_data(n, 'generated_images', 0)
 # 	return images*max(1, n//len(images))
+
+def get_neg_images(n):
+	# return gen'd images w neg labels
+	images = get_image_data(n//3, 'generated_images', 0) + get_neg_images_rand(n//3) + get_neg_images_uniform(n//3)
+	return images*max(1, n//len(images))
 
 
 def get_pos_images(n, dir_name='src/sunsets'):
