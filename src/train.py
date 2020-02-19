@@ -4,11 +4,12 @@ import torch
 from tqdm import tqdm
 from src.batch_data import batch as get_batches
 
-def train_net(net, data, epochs=1000, batch_size = 100, verbose=True, lr=.001):
+def train_net(net, data, epochs=1000, batch_size = 100, verbose=True, lr=.001, save_best_net=True):
 
 	# train net
 	loss_fn = torch.nn.MSELoss()
 	optimizer = torch.optim.Adam(net.parameters(), lr=lr)
+	best_net, min_loss = None, -float('inf')
 	with tqdm(range(epochs), desc='0') as epoch_counter:
 		try:
 			for epoch in epoch_counter:
@@ -38,8 +39,17 @@ def train_net(net, data, epochs=1000, batch_size = 100, verbose=True, lr=.001):
 				# report loss
 				avg_loss = tot_batch_loss / float(len(batches))
 				epoch_counter.write(" Epoch {} Avg Loss: {}\n".format(epoch, avg_loss))
+				if save_best_net and avg_loss < min_loss:
+					best_net, min_loss = net.copy(), avg_loss.copy()
+
 		except:
 			print("Interrupted.")
-			return net
+			if save_best_net:
+				return best_net
+			else:
+				return net
 	print('\n')
-	return net
+	if save_best_net:
+		return best_net
+	else:
+		return net
