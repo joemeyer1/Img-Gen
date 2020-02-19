@@ -53,7 +53,7 @@ def get_neg_images_rand(n):
 	return [((torch.rand(3, 256, 256)*255).int().float(), torch.tensor([0], dtype=torch.float)) for _ in range(n)]
 
 def get_neg_images_uniform(n, val=127):
-	return torch.ones(n, 3, 256, 256)*val
+	return [((torch.ones(3, 256, 256)*val).int().float(), torch.tensor([0], dtype=torch.float)) for _ in range(n)]
 
 # def get_neg_images(n):
 # 	# return gen'd images w neg labels

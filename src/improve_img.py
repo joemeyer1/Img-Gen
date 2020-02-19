@@ -9,6 +9,7 @@ def improve(image, net, epochs, verbose=True, show_every=20):
 	optimizer = torch.optim.Adam({image}, lr=10, amsgrad=True)
 	loss_fn = torch.nn.MSELoss()
 	pos_label = torch.tensor([[1*10000]]*len(image), dtype=torch.float)
+	im = None
 	for i in range(epochs):
 		try:
 			# prepare for backprop
@@ -23,9 +24,9 @@ def improve(image, net, epochs, verbose=True, show_every=20):
 			optimizer.step()
 			# report loss
 			if verbose:
-				print("Epoch Loss: {}".format(loss))
+				print("Epoch {} Loss: {}".format(i, loss))
 				if i%show_every == 0:
-					show_image(image[0])
+					im = show_image(image[0], im)
 		except:
 			print("Interrupted.")
 			return image
@@ -60,11 +61,14 @@ def test2(epochs=100, verbose=False):
 	print("net(image): {}".format(net(image)))
 	return image
 
-def show_image(img_vec):
+def show_image(img_vec, im=None, fname='temp.jpg'):
 	img_vec = format(img_vec)
-	im = Image.new('RGB', (256,256))
+	if not im:
+		im = Image.new('RGB', (256,256))
 	im.putdata(img_vec)
-	im.show()
+	# im.show()
+	im.save(fname)
+	return im
 
 def format(img, n=256):
 	r,g,b=(ch.int().flatten().tolist() for ch in img)

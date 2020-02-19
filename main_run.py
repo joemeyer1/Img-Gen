@@ -10,18 +10,18 @@ from PIL import Image
 from src.improve_img import improve
 from src.data_gen import get_image_vec
 
-# start_img_fn = lambda n, u_val : uniform(n, u_val)
-start_img_fn = lambda n, u_val : random_im(n)
+start_img_fn = lambda n, u_val : uniform(n, u_val)
+# start_img_fn = lambda n, u_val : random_im(n)
 # start_img_fn = lambda n, u_val : get_image_vecs()
 
-def main(epochs=10000, net_filename='net-sunset.pickle', img_filename='image', u_val=127, start_img_fn=start_img_fn, n=10):
+def main(epochs=10000, net_filename='net-sunset.pickle', img_filename='image', u_val=127, start_img_fn=start_img_fn, n=10, show_every=10):
 	n = int(n)
 	epochs = int(epochs)
 	net = get_net(net_filename)
 	img = start_img_fn(n, int(u_val))
 	print("old: {}\n\n".format(format(img[0])[:10]))
 	print("\tnet(old): {}".format(net(img)))
-	img_vec = improve(img, net, epochs,verbose=True)
+	img_vec = improve(img, net, epochs,verbose=True, show_every=show_every)
 	for i in range(n):
 		img = format(img_vec[i])
 		save_img(img, img_filename+str(i)+'.jpg')
