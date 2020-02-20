@@ -45,7 +45,7 @@ def train_net(net, data, epochs=1000, batch_size = 100, verbose=True, lr=.001, s
 				epoch_loss = tot_batch_loss / float(len(batches))
 				# epoch_counter.write("")
 				epoch_counter.write(" Epoch {} Avg Loss: {}\n".format(epoch, epoch_loss))
-				if save_best_net and epoch_loss < min_loss:
+				if save_best_net and avg_loss < min_loss:
 					best_net, min_loss = deepcopy(net), deepcopy(avg_loss)
 				epoch_counter.desc = "Total Loss: "+str(avg_loss)
 
