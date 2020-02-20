@@ -14,16 +14,15 @@ from src.data_gen import get_data
 from src.train import train_net
 
 
-def main(use_old=False, save_net_as='net-sunset-2-16.pickle', get_net_from='net-sunset.pickle'):
+def main(save_net_as='net-sunset-2-17.pickle', get_net_from=None):#'net-sunset-2-16.pickle'):
 	# pass None for get_net_from to make a new net.
-	use_old = bool(use_old)
 	global net
-	net = train_img_net(use_old, save_net_as, get_net_from)
+	net = train_img_net(save_net_as, get_net_from)
 
-def train_img_net(use_old=False, save_net_as='net-sunset-2-16.pickle', get_net_from='net-sunset.pickle'):
+def train_img_net(save_net_as='net-sunset-2-16.pickle', get_net_from='net-sunset.pickle'):
 	# get net
 	print("Getting Net...")
-	net = get_net(use_old, get_net_from)
+	net = get_net(get_net_from)
 	# get data [(tensor(image/non-image), tensor(P(image)), ... ]
 	print("Getting Data...")
 	data = get_data(1000)
@@ -43,9 +42,9 @@ def train_img_net(use_old=False, save_net_as='net-sunset-2-16.pickle', get_net_f
 # HELPERS
 
 # helper for train_img_net()
-def get_net(use_old, filename):
+def get_net(filename):
 	# get net
-	if use_old:
+	if filename:
 		# load from binary file
 		try:
 			print("Seeking Net...")

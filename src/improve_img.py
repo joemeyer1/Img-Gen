@@ -1,8 +1,9 @@
 
 import torch
 from PIL import Image
+from tqdm import tqdm
 
-def improve(image, net, epochs, verbose=True, show_every=20):
+def improve(image, net, epochs, verbose=True, show_every=20, save_intermediate=False):
 	# improve image
 
 	image = torch.nn.Parameter(image)
@@ -10,28 +11,50 @@ def improve(image, net, epochs, verbose=True, show_every=20):
 	loss_fn = torch.nn.MSELoss()
 	pos_label = torch.tensor([[1*10000]]*len(image), dtype=torch.float)
 	im = None
-	for i in range(epochs):
-		try:
-			# prepare for backprop
-			optimizer.zero_grad()
-			# compute prediction
-			output = net(image)
-			# compute loss
-			loss = loss_fn(output, pos_label)
-			# compute loss gradient
-			loss.backward()
-			# update image
-			optimizer.step()
-			# report loss
-			if verbose:
-				print("Epoch {} Loss: {}".format(i, loss))
-				if i%show_every == 0:
-					im = show_image(image[0], im)
-		except:
-			print("Interrupted.")
-			return image
+	if not save_intermediate:
+		img_fname = 'temp.jpg'
+	with tqdm(range(epochs)) as t:
+		for i in t:
+			try:
+				# prepare for backprop
+				optimizer.zero_grad()
+				# compute prediction
+				output = net(image)
+				# compute loss
+				loss = loss_fn(output, pos_label)
+				# compute loss gradient
+				loss.backward()
+				# update image
+				optimizer.step()
+				# report loss
+				if verbose:
+					t.desc = "Epoch {} Loss: {}".format(i, loss)
+					t.refresh()
+					if i%show_every == 0:
+						if save_intermediate:
+							img_fname = 'temp'+str(i)+'.jpg'
+						im = save_image(image[0], im, img_fname)
+			except:
+				print("Interrupted.")
+				return image
 	print('\n')
 	return image
+
+def save_image(img_vec, im=None, fname='temp.jpg'):
+	size = tuple(img_vec[0].shape)
+	img_vec = format(img_vec, size = size)
+	if not im:
+		im = Image.new('RGB', size)
+	im.putdata(img_vec)
+	# im.show()
+	im.save(fname)
+	return im
+
+def format(img, size=(256, 256)):
+	n = size[0]*size[1]
+	r,g,b=(ch.int().flatten().tolist() for ch in img)
+	return [(r[i], g[i], b[i]) for i in range(n)]
+
 
 def test(epochs=20, verbose=False):
 	global net
@@ -60,16 +83,3 @@ def test2(epochs=100, verbose=False):
 	print("image: {}".format(image))
 	print("net(image): {}".format(net(image)))
 	return image
-
-def show_image(img_vec, im=None, fname='temp.jpg'):
-	img_vec = format(img_vec)
-	if not im:
-		im = Image.new('RGB', (256,256))
-	im.putdata(img_vec)
-	# im.show()
-	im.save(fname)
-	return im
-
-def format(img, n=256):
-	r,g,b=(ch.int().flatten().tolist() for ch in img)
-	return [(r[i], g[i], b[i]) for i in range(n**2)]

@@ -14,7 +14,14 @@ start_img_fn = lambda n, u_val : uniform(n, u_val)
 # start_img_fn = lambda n, u_val : random_im(n)
 # start_img_fn = lambda n, u_val : get_image_vecs()
 
-def main(epochs=10000, net_filename='net-sunset.pickle', img_filename='image', u_val=127, start_img_fn=start_img_fn, n=10, show_every=10):
+def main(epochs=10000,
+		net_filename='net-sunset.pickle',
+		img_filename='image',
+		u_val=127,
+		start_img_fn=start_img_fn,
+		n=10,
+		show_every=10,
+		im_size = (256, 256)):
 	n = int(n)
 	epochs = int(epochs)
 	net = get_net(net_filename)
@@ -31,15 +38,18 @@ def main(epochs=10000, net_filename='net-sunset.pickle', img_filename='image', u
 	# return img
 
 
-def format(img, n=256):
+def format(img, size=(256, 256)):
+	n = size[0]*size[1]
 	r,g,b=(ch.int().flatten().tolist() for ch in img)
-	return [(r[i], g[i], b[i]) for i in range(n**2)]
+	return [(r[i], g[i], b[i]) for i in range(n)]
 
-def uniform(n=1, val=127):
-	return torch.ones(n, 3, 256, 256)*val
+def uniform(n=1, val=127, size = (256, 256)):
+	w, h = size
+	return torch.ones(n, 3, w, h)*val
 
-def random_im(n=1):
-	return torch.rand(n,3,256,256)*255
+def random_im(n=1, size = (256, 256)):
+	w, h = size
+	return torch.rand(n,3,w,h)*255
 
 
 def get_net(net_filename):
@@ -48,8 +58,8 @@ def get_net(net_filename):
 	return net
 
 
-def save_img(img_vec, img_filename):
-	im = Image.new('RGB', (256,256))
+def save_img(img_vec, img_filename, size=(256,256)):
+	im = Image.new('RGB', size)
 	im.putdata(img_vec)
 	im.show()
 	# save it
