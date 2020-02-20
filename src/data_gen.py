@@ -8,7 +8,7 @@ import sys
 import random
 sys.path.append('/Users/joe/img_gen/src')
 
-def get_data(n=6000):
+def get_data(n=6000, img_size=(256,256)):
 	print("\tgetting neg data...")
 	neg_images = get_neg_images(n//2)
 	print("\tgetting pos data...")
@@ -29,7 +29,7 @@ def get_data(n=6000):
 
 # HELPERS for get_data()
 
-def get_image_data(n, dir_name='src/sunsets', label=1):
+def get_image_data(n, dir_name='src/sunsets', label=1, img_size=(256,256)):
 	fnames = os.listdir(dir_name)
 	img_vecs = []
 	i = 0
@@ -37,7 +37,7 @@ def get_image_data(n, dir_name='src/sunsets', label=1):
 		fname = fnames[i]
 		fpath = os.path.join(dir_name, fname)
 		try:
-			img_vec = get_image_vec(fpath)
+			img_vec = get_image_vec(fpath, img_size)
 			img_vecs.append(img_vec)
 			n -= 1
 		except:
@@ -60,21 +60,21 @@ def get_neg_images_uniform(n, val=127):
 # 	images = get_image_data(n, 'generated_images', 0)
 # 	return images*max(1, n//len(images))
 
-def get_neg_images(n):
+def get_neg_images(n, img_size=(256,256)):
 	# return gen'd images w neg labels
-	images = get_image_data(n//3, 'generated_images', 0) + get_neg_images_rand(n//3) + get_neg_images_uniform(n//3)
+	images = get_image_data(n//3, 'generated_images', 0, img_size) + get_neg_images_rand(n//3) + get_neg_images_uniform(n//3)
 	return images*max(1, n//len(images))
 
 
-def get_pos_images(n, dir_name='src/sunsets'):
-	return get_image_data(n, 'src/sunsets', 1)
+def get_pos_images(n, dir_name='src/sunsets', img_size=(256,256)):
+	return get_image_data(n, 'src/sunsets', 1, img_size)
 
 
 
 # helpers for get_pos_images()
 
-def get_image_vec(fname):
-	im = Image.open(fname).resize((256,256))
+def get_image_vec(fname, img_size=(256,256)):
+	im = Image.open(fname).resize(img_size)
 	r, g, b = get_band_lists(im)
 	img_vec = get_tensor(r, g, b)
 	return img_vec

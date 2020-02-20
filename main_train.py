@@ -14,18 +14,20 @@ from src.data_gen import get_data
 from src.train import train_net
 
 
-def main(save_net_as='net-sunset-2-17.pickle', get_net_from=None, n=1000, epochs=1000, batch_size=100):#'net-sunset-2-16.pickle'):
+def main(save_net_as='net-sunset-2-17.pickle', get_net_from=None, n=1000, epochs=1000, batch_size=100, img_size=(256, 256)):#'net-sunset-2-16.pickle'):
 	# pass None for get_net_from to make a new net.
 	global net
-	net = train_img_net(save_net_as, get_net_from, n, epochs, batch_size)
+	if img_size == 'hd':
+		img_size = (1920, 1080)
+	net = train_img_net(save_net_as, get_net_from, n, epochs, batch_size, img_size)
 
-def train_img_net(save_net_as='net-sunset-2-16.pickle', get_net_from='net-sunset.pickle', n=1000, epochs=1000, batch_size=100):
+def train_img_net(save_net_as='net-sunset-2-16.pickle', get_net_from='net-sunset.pickle', n=1000, epochs=1000, batch_size=100, img_size=(256, 256)):
 	# get net
 	print("Getting Net...")
 	net = get_net(get_net_from)
 	# get data [(tensor(image/non-image), tensor(P(image)), ... ]
 	print("Getting Data...")
-	data = get_data(n)
+	data = get_data(n, img_size)
 	# train net on data
 	print("Training Net...")
 	lr = .0001
