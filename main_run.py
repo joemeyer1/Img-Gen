@@ -14,16 +14,17 @@ start_img_fn = lambda n, u_val : uniform(n, u_val)
 # start_img_fn = lambda n, u_val : random_im(n)
 # start_img_fn = lambda n, u_val : get_image_vecs()
 
-def main(epochs=10000,
-		net_filename='net-sunset.pickle',
-		img_filename='image',
+def main(net_filename='net-sunset.pickle',
+		img_filename=None,
 		u_val=127,
 		start_img_fn=start_img_fn,
 		n=10,
 		show_every=10,
-		im_size = (256, 256)):
-	n = int(n)
-	epochs = int(epochs)
+		im_size = (256, 256),
+		epochs=10000):
+
+	if not img_filename:
+		img_filename = net_filename.split('.')[0]+'.jpg'
 	net = get_net(net_filename)
 	img = start_img_fn(n, int(u_val))
 	print("old: {}\n\n".format(format(img[0])[:10]))
