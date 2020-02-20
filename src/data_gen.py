@@ -10,7 +10,7 @@ sys.path.append('/Users/joe/img_gen/src')
 
 def get_data(n=6000):
 	print("\tgetting neg data...")
-	neg_images = get_neg_images(n)
+	neg_images = get_neg_images(n//2)
 	print("\tgetting pos data...")
 	pos_images = get_pos_images(len(neg_images))
 	del neg_images[len(pos_images):]
