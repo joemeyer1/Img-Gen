@@ -9,7 +9,7 @@ def train_net(net, data, epochs=1000, batch_size = 100, verbose=True, lr=.001, s
 	# train net
 	loss_fn = torch.nn.MSELoss()
 	optimizer = torch.optim.Adam(net.parameters(), lr=lr)
-	best_net, min_loss = None, -float('inf')
+	best_net, min_loss = None, float('inf')
 	with tqdm(range(epochs)) as epoch_counter:
 		try:
 			for epoch in epoch_counter:
