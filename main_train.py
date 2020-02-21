@@ -18,7 +18,7 @@ def main(save_net_as='net-sunset-2-17.pickle', get_net_from=None, n=1000, epochs
 	# pass None for get_net_from to make a new net.
 	global net
 	if img_size == 'hd':
-		img_size = (1920, 1080)
+		img_size = (1024, 1024)
 	net = train_img_net(save_net_as, get_net_from, n, epochs, batch_size, img_size)
 
 def train_img_net(save_net_as='net-sunset-2-16.pickle', get_net_from='net-sunset.pickle', n=1000, epochs=1000, batch_size=100, img_size=(256, 256)):
@@ -55,10 +55,10 @@ def get_net(filename, img_size):
 		except:
 			print("Net not found. Making new one.")
 			# get new net if old net not found
-			net = CNNClassifier(img_size)
+			net = CNNClassifier(max(img_size))
 	else:
 		# get new net
-		net = CNNClassifier(img_size)
+		net = CNNClassifier(max(img_size))
 
 	return net
 

@@ -25,9 +25,9 @@ def main(net_filename='net-sunset.pickle',
 		temp_name='tempcopy'):
 
 	if not img_filename:
-		img_filename = net_filename.split('.')[0]+'.jpg'
+		img_filename = net_filename.split('.')[0]
 	if im_size == 'hd':
-		im_size = (1920, 1080)
+		im_size = (1024, 1024)
 	net = get_net(net_filename)
 	img = start_img_fn(n, int(u_val), im_size)
 	print("start: {}\n\n".format(format(img[0])[:10]))
