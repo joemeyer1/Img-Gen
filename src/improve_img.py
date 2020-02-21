@@ -3,7 +3,7 @@ import torch
 from PIL import Image
 from tqdm import tqdm
 
-def improve(image, net, epochs, verbose=True, show_every=20, save_intermediate=False):
+def improve(image, net, epochs, verbose=True, show_every=20, save_intermediate=False, img_fname='temp'):
 	# improve image
 
 	image = torch.nn.Parameter(image)
@@ -11,8 +11,6 @@ def improve(image, net, epochs, verbose=True, show_every=20, save_intermediate=F
 	loss_fn = torch.nn.MSELoss()
 	pos_label = torch.tensor([[1*10000]]*len(image), dtype=torch.float)
 	im = None
-	if not save_intermediate:
-		img_fname = 'temp.jpg'
 	with tqdm(range(epochs)) as t:
 		for i in t:
 			try:
@@ -32,7 +30,7 @@ def improve(image, net, epochs, verbose=True, show_every=20, save_intermediate=F
 					t.refresh()
 					if i%show_every == 0:
 						if save_intermediate:
-							img_fname = 'temp'+str(i)+'.jpg'
+							img_fname += str(i)
 						im = save_image(image[0], im, img_fname)
 			except:
 				print("Interrupted.")
@@ -40,7 +38,8 @@ def improve(image, net, epochs, verbose=True, show_every=20, save_intermediate=F
 	print('\n')
 	return image
 
-def save_image(img_vec, im=None, fname='temp.jpg'):
+def save_image(img_vec, im=None, fname='temp'):
+	fname += '.jpg'
 	size = tuple(img_vec[0].shape)
 	img_vec = format(img_vec, size = size)
 	if not im:

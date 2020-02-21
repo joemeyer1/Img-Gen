@@ -10,9 +10,9 @@ sys.path.append('/Users/joe/img_gen/src')
 
 def get_data(n=6000, img_size=(256,256)):
 	print("\tgetting neg data...")
-	neg_images = get_neg_images(n//2)
+	neg_images = get_neg_images(n//2, img_size)
 	print("\tgetting pos data...")
-	pos_images = get_pos_images(len(neg_images))
+	pos_images = get_pos_images(len(neg_images), img_size=img_size)
 	del neg_images[len(pos_images):]
 	images = neg_images+pos_images
 	# mix up images
@@ -28,6 +28,18 @@ def get_data(n=6000, img_size=(256,256)):
 	return torch.stack(features), torch.stack(labels)
 
 # HELPERS for get_data()
+
+
+def get_neg_images(n, img_size=(256,256)):
+	# return gen'd images w neg labels
+	images = get_image_data(n//3, 'generated_images', 0, img_size) + get_neg_images_rand(n//3, img_size) + get_neg_images_uniform(n//3, size=img_size)
+	return images*max(1, n//len(images))
+
+
+def get_pos_images(n, dir_name='src/sunsets', img_size=(256,256)):
+	return get_image_data(n, 'src/sunsets', 1, img_size)
+
+
 
 def get_image_data(n, dir_name='src/sunsets', label=1, img_size=(256,256)):
 	fnames = os.listdir(dir_name)
@@ -48,35 +60,26 @@ def get_image_data(n, dir_name='src/sunsets', label=1, img_size=(256,256)):
 	# return data w pos labels
 	return [(img_vec, torch.tensor([label], dtype=torch.float)) for img_vec in img_vecs]
 
-def get_neg_images_rand(n):
+def get_neg_images_rand(n, size):
 	# return rand imgs w neg labels
-	return [((torch.rand(3, 256, 256)*255).int().float(), torch.tensor([0], dtype=torch.float)) for _ in range(n)]
+	w, h = size
+	return [((torch.rand(3, w, h)*255).int().float(), torch.tensor([0], dtype=torch.float)) for _ in range(n)]
 
-def get_neg_images_uniform(n, val=127):
-	return [((torch.ones(3, 256, 256)*val).int().float(), torch.tensor([0], dtype=torch.float)) for _ in range(n)]
+def get_neg_images_uniform(n, val=127, size=(256,256)):
+	w, h = size
+	return [((torch.ones(3, w, h)*val).int().float(), torch.tensor([0], dtype=torch.float)) for _ in range(n)]
 
 # def get_neg_images(n):
 # 	# return gen'd images w neg labels
 # 	images = get_image_data(n, 'generated_images', 0)
 # 	return images*max(1, n//len(images))
 
-def get_neg_images(n, img_size=(256,256)):
-	# return gen'd images w neg labels
-	images = get_image_data(n//3, 'generated_images', 0, img_size) + get_neg_images_rand(n//3) + get_neg_images_uniform(n//3)
-	return images*max(1, n//len(images))
-
-
-def get_pos_images(n, dir_name='src/sunsets', img_size=(256,256)):
-	return get_image_data(n, 'src/sunsets', 1, img_size)
-
-
-
 # helpers for get_pos_images()
 
 def get_image_vec(fname, img_size=(256,256)):
 	im = Image.open(fname).resize(img_size)
 	r, g, b = get_band_lists(im)
-	img_vec = get_tensor(r, g, b)
+	img_vec = get_tensor(r, g, b, img_size)
 	return img_vec
 
 # helpers for get_image_vec()
@@ -85,9 +88,10 @@ def get_band_lists(im):
 	r, g, b = (list(d.getdata()) for d in data)
 	return r, g, b
 
-def get_tensor(r, g, b):
+def get_tensor(r, g, b, img_size):
+	w, h = img_size
 	r, g, b = torch.tensor(r, dtype=torch.float), torch.tensor(g, dtype=torch.float), torch.tensor(b, dtype=torch.float)
-	rgb = torch.cat((r, g, b)).reshape(3, 256, 256)
+	rgb = torch.cat((r, g, b)).reshape(3, w, h)
 	return rgb
 
 

@@ -24,7 +24,7 @@ def main(save_net_as='net-sunset-2-17.pickle', get_net_from=None, n=1000, epochs
 def train_img_net(save_net_as='net-sunset-2-16.pickle', get_net_from='net-sunset.pickle', n=1000, epochs=1000, batch_size=100, img_size=(256, 256)):
 	# get net
 	print("Getting Net...")
-	net = get_net(get_net_from)
+	net = get_net(get_net_from, img_size)
 	# get data [(tensor(image/non-image), tensor(P(image)), ... ]
 	print("Getting Data...")
 	data = get_data(n, img_size)
@@ -44,7 +44,7 @@ def train_img_net(save_net_as='net-sunset-2-16.pickle', get_net_from='net-sunset
 # HELPERS
 
 # helper for train_img_net()
-def get_net(filename):
+def get_net(filename, img_size):
 	# get net
 	if filename:
 		# load from binary file
@@ -55,10 +55,10 @@ def get_net(filename):
 		except:
 			print("Net not found. Making new one.")
 			# get new net if old net not found
-			net = CNNClassifier()
+			net = CNNClassifier(img_size)
 	else:
 		# get new net
-		net = CNNClassifier()
+		net = CNNClassifier(img_size)
 
 	return net
 

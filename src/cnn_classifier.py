@@ -5,12 +5,12 @@ from src.cnn import CNN
 from src.classifier import Classifier
 
 class CNNClassifier(nn.Module):
-	def __init__(self):
+	def __init__(self, size):
 		super(CNNClassifier, self).__init__()
 
 		self.net = nn.Sequential(
 			CNN(),
-			Classifier()
+			Classifier(size)
 		)
 
 	def forward(self, x):

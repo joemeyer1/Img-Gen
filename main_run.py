@@ -10,7 +10,7 @@ from PIL import Image
 from src.improve_img import improve
 from src.data_gen import get_image_vec
 
-start_img_fn = lambda n, u_val : uniform(n, u_val)
+start_img_fn = lambda n, u_val, im_size : uniform(n, u_val, im_size)
 # start_img_fn = lambda n, u_val : random_im(n)
 # start_img_fn = lambda n, u_val : get_image_vecs()
 
@@ -21,15 +21,19 @@ def main(net_filename='net-sunset.pickle',
 		n=10,
 		show_every=10,
 		im_size = (256, 256),
-		epochs=10000):
+		epochs=10000,
+		temp_name='tempcopy'):
 
 	if not img_filename:
 		img_filename = net_filename.split('.')[0]+'.jpg'
+	if im_size == 'hd':
+		im_size = (1920, 1080)
 	net = get_net(net_filename)
-	img = start_img_fn(n, int(u_val))
-	print("old: {}\n\n".format(format(img[0])[:10]))
+	img = start_img_fn(n, int(u_val), im_size)
+	print("start: {}\n\n".format(format(img[0])[:10]))
+	print("start size: {}".format(img[0].shape))
 	print("\tnet(old): {}".format(net(img)))
-	img_vec = improve(img, net, epochs,verbose=True, show_every=show_every)
+	img_vec = improve(img, net, epochs,verbose=True, show_every=show_every, img_fname=temp_name)
 	for i in range(n):
 		img = format(img_vec[i])
 		save_img(img, img_filename+str(i)+'.jpg')
