@@ -66,7 +66,7 @@ def get_net(net_filename):
 def save_img(img_vec, img_filename, size=(256,256)):
 	im = Image.new('RGB', size)
 	im.putdata(img_vec)
-	im.show()
+	# im.show()
 	# save it
 	im.save(img_filename)
 
