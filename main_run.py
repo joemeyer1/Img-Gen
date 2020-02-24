@@ -22,6 +22,7 @@ def main(net_filename='net-sunset.pickle',
 		show_every=10,
 		im_size = (256, 256),
 		epochs=10000,
+		lr=10,
 		temp_name='tempcopy'):
 
 	if not img_filename:
@@ -30,13 +31,13 @@ def main(net_filename='net-sunset.pickle',
 		im_size = (1024, 1024)
 	net = get_net(net_filename)
 	img = start_img_fn(n, int(u_val), im_size)
-	print("start: {}\n\n".format(format(img[0])[:10]))
+	print("start: {}\n\n".format(format(img[0], im_size)[:10]))
 	print("start size: {}".format(img[0].shape))
 	print("\tnet(old): {}".format(net(img)))
-	img_vec = improve(img, net, epochs,verbose=True, show_every=show_every, img_fname=temp_name)
+	img_vec = improve(img, net, epochs,lr=lr,verbose=True, show_every=show_every, img_fname=temp_name)
 	for i in range(n):
-		img = format(img_vec[i])
-		save_img(img, img_filename+str(i)+'.jpg')
+		img = format(img_vec[i], im_size)
+		save_img(img, img_filename+str(i)+'.jpg', im_size)
 		if i == 0:
 			print("new: {}\n\n\n\n\n".format(img[:10]))
 			print("\tnet(new): {}".format(net(img_vec)))

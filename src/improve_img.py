@@ -3,11 +3,18 @@ import torch
 from PIL import Image
 from tqdm import tqdm
 
-def improve(image, net, epochs, verbose=True, show_every=20, save_intermediate=False, img_fname='temp'):
+def improve(image,
+			net,
+			epochs,
+			lr=10,
+			verbose=True,
+			show_every=20,
+			save_intermediate=False,
+			img_fname='temp'):
 	# improve image
 
 	image = torch.nn.Parameter(image)
-	optimizer = torch.optim.Adam({image}, lr=10, amsgrad=True)
+	optimizer = torch.optim.Adam({image}, lr=lr, amsgrad=True)
 	loss_fn = torch.nn.MSELoss()
 	pos_label = torch.tensor([[1*10000]]*len(image), dtype=torch.float)
 	im = None
