@@ -1,5 +1,6 @@
 
 import torch
+import os
 from PIL import Image
 from tqdm import tqdm
 
@@ -45,7 +46,7 @@ def improve(image,
 	print('\n')
 	return image
 
-def save_image(img_vec, im=None, fname='temp'):
+def save_image(img_vec, im=None, fname='temp', reopen_file=False):
 	fname += '.jpg'
 	size = tuple(img_vec[0].shape)
 	img_vec = format(img_vec, size = size)
@@ -54,6 +55,9 @@ def save_image(img_vec, im=None, fname='temp'):
 	im.putdata(img_vec)
 	# im.show()
 	im.save(fname)
+	if reopen_file:
+		os.system("killall Preview")
+		os.system("open {}".format(fname))
 	return im
 
 def format(img, size=(256, 256)):

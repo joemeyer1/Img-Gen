@@ -10,9 +10,12 @@ from PIL import Image
 from src.improve_img import improve
 from src.data_gen import get_image_vec
 
-start_img_fn = lambda n, u_val, im_size : uniform(n, u_val, im_size)
+# start_img_fn = lambda n, u_val, im_size : uniform(n, u_val, im_size)
 # start_img_fn = lambda n, u_val : random_im(n)
 # start_img_fn = lambda n, u_val : get_image_vecs()
+
+from src.image_functions import get_image_vec
+start_img_fn = lambda n, u_val, im_size : torch.stack([get_image_vec('valley.jpg', im_size) for _ in range(n)])
 
 def main(net_filename='net-sunset.pickle',
 		img_filename=None,
@@ -23,10 +26,10 @@ def main(net_filename='net-sunset.pickle',
 		im_size = (256, 256),
 		epochs=10000,
 		lr=10,
-		temp_name='tempcopy'):
+		temp_name='temp'):
 
 	if not img_filename:
-		img_filename = net_filename.split('.')[0]
+		img_filename = net_filename.split('.')[0].split('/')[-1]
 	if im_size == 'hd':
 		im_size = (1024, 1024)
 	net = get_net(net_filename)
@@ -37,7 +40,7 @@ def main(net_filename='net-sunset.pickle',
 	img_vec = improve(img, net, epochs,lr=lr,verbose=True, show_every=show_every, img_fname=temp_name)
 	for i in range(n):
 		img = format(img_vec[i], im_size)
-		save_img(img, img_filename+str(i)+'.jpg', im_size)
+		save_img(img, img_filename+'--'+str(i)+'.jpg', im_size)
 		if i == 0:
 			print("new: {}\n\n\n\n\n".format(img[:10]))
 			print("\tnet(new): {}".format(net(img_vec)))
@@ -93,18 +96,5 @@ def get_image_vecs(n=float('inf'), dir_name='recent'):
 if __name__ == '__main__':
 	fire.Fire(main)
 
-# def gen(epochs=500, net_filename='net.pickle', img_filename='image.jpg'):
 
-# 	# get net
-# 	with open(net_filename, 'rb') as f:
-# 		net = pickle.load(f)
-# 	img = uniform()
-# 	# improve it
-# 	improved_img = improve(img, net, epochs)
-# 	# make it an image
-# 	img_vec = format(improved_img[0])
-# 	im = Image.fromarray(img_vec, 'RGB')
-# 	im.show()
-# 	# save it
-# 	im.save(img_filename)
 

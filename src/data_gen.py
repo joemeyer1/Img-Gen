@@ -33,11 +33,12 @@ def get_data(n=6000, img_size=(256,256)):
 def get_neg_images(n, img_size=(256,256)):
 	# return gen'd images w neg labels
 	images = get_image_data(n//3, 'generated_images', 0, img_size) + get_neg_images_rand(n//3, img_size) + get_neg_images_uniform(n//3, size=img_size)
+	# images = get_neg_images_rand(n//2, img_size) + get_neg_images_uniform(n//2, size=img_size)
 	return images*max(1, n//len(images))
 
 
 def get_pos_images(n, dir_name='src/sunsets', img_size=(256,256)):
-	return get_image_data(n, 'src/sunsets', 1, img_size)
+	return get_image_data(n, dir_name, 1, img_size)
 
 
 
