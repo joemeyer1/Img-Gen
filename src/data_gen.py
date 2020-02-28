@@ -45,9 +45,9 @@ def get_pos_images(n, dir_name='src/sunsets', img_size=(256,256)):
 def get_image_data(n, dir_name='src/sunsets', label=1, img_size=(256,256)):
 	fnames = os.listdir(dir_name)
 	img_vecs = []
-	i = 0
-	while n and i < len(fnames):
-		fname = fnames[i]
+	while n and fnames:
+		i = random.randint(0, len(fnames)-1)
+		fname = fnames.pop(i)
 		fpath = os.path.join(dir_name, fname)
 		try:
 			img_vec = get_image_vec(fpath, img_size)
@@ -57,7 +57,6 @@ def get_image_data(n, dir_name='src/sunsets', label=1, img_size=(256,256)):
 			print("{} invalid.".format(fpath))
 			# image file invalid
 			pass
-		i += 1
 	# return data w pos labels
 	return [(img_vec, torch.tensor([label], dtype=torch.float)) for img_vec in img_vecs]
 
