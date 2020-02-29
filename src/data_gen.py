@@ -14,6 +14,8 @@ def get_data(n=6000, img_size=(256,256)):
 	print("\tgetting pos data...")
 	pos_images = get_pos_images(len(neg_images), img_size=img_size)
 	del neg_images[len(pos_images):]
+	return torch.stack(pos_images), torch.stack(neg_images)
+
 	images = neg_images+pos_images
 	# mix up images
 	indices = [i for i in range(len(images))]
@@ -32,8 +34,8 @@ def get_data(n=6000, img_size=(256,256)):
 
 def get_neg_images(n, img_size=(256,256)):
 	# return gen'd images w neg labels
-	images = get_image_data(n//3, 'generated_images', 0, img_size) + get_neg_images_rand(n//3, img_size) + get_neg_images_uniform(n//3, size=img_size)
-	# images = get_neg_images_rand(n//2, img_size) + get_neg_images_uniform(n//2, size=img_size)
+	# images = get_image_data(n//3, 'generated_images', 0, img_size) + get_neg_images_rand(n//3, img_size) + get_neg_images_uniform(n//3, size=img_size)
+	images = get_neg_images_rand(n//2, img_size) + get_neg_images_uniform(n//2, size=img_size)
 	return images*max(1, n//len(images))
 
 
@@ -58,16 +60,19 @@ def get_image_data(n, dir_name='src/sunsets', label=1, img_size=(256,256)):
 			# image file invalid
 			pass
 	# return data w pos labels
-	return [(img_vec, torch.tensor([label], dtype=torch.float)) for img_vec in img_vecs]
+	return img_vecs
+	# return [(img_vec, torch.tensor([label], dtype=torch.float)) for img_vec in img_vecs]
 
 def get_neg_images_rand(n, size):
 	# return rand imgs w neg labels
 	w, h = size
-	return [((torch.rand(3, w, h)*255).int().float(), torch.tensor([0], dtype=torch.float)) for _ in range(n)]
+	return [(torch.rand(3, w, h)*255).int().float() for _ in range(n)]
+	# return [((torch.rand(3, w, h)*255).int().float(), torch.tensor([0], dtype=torch.float)) for _ in range(n)]
 
 def get_neg_images_uniform(n, val=127, size=(256,256)):
 	w, h = size
-	return [((torch.ones(3, w, h)*val).int().float(), torch.tensor([0], dtype=torch.float)) for _ in range(n)]
+	return [(torch.ones(3, w, h)*val).int().float() for _ in range(n)]
+	# return [((torch.ones(3, w, h)*val).int().float(), torch.tensor([0], dtype=torch.float)) for _ in range(n)]
 
 # def get_neg_images(n):
 # 	# return gen'd images w neg labels
