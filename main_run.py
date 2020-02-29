@@ -3,6 +3,7 @@
 import pickle
 import torch
 import fire
+import os
 # import numpy as np
 from PIL import Image
 
@@ -10,12 +11,12 @@ from PIL import Image
 from src.improve_img import improve
 from src.data_gen import get_image_vec
 
-# start_img_fn = lambda n, u_val, im_size : uniform(n, u_val, im_size)
-# start_img_fn = lambda n, u_val : random_im(n)
-# start_img_fn = lambda n, u_val : get_image_vecs()
+start_img_fn = "lambda n, u_val, im_size : uniform(n, u_val, im_size)"
+# start_img_fn = "lambda n, u_val : random_im(n)"
+# start_img_fn = "lambda n, u_val : get_image_vecs()"
 
-from src.image_functions import get_image_vec
-start_img_fn = lambda n, u_val, im_size : torch.stack([get_image_vec('valley.jpg', im_size) for _ in range(n)])
+# from src.image_functions import get_image_vec
+# start_img_fn = "lambda n, u_val, im_size : torch.stack([get_image_vec('valley.jpg', im_size) for _ in range(n)])"
 
 def main(net_filename='net-sunset.pickle',
 		img_filename=None,
@@ -27,23 +28,31 @@ def main(net_filename='net-sunset.pickle',
 		epochs=10000,
 		lr=10,
 		temp_name='temp'):
-
+	# get img_filename (to save as) if not given
 	if not img_filename:
 		img_filename = net_filename.split('.')[0].split('/')[-1]
-	if im_size == 'hd':
-		im_size = (1024, 1024)
+	# get net
 	net = get_net(net_filename)
+	# get fn from start img str
+	start_img_fn = eval(start_img_fn)
+	# get start img
 	img = start_img_fn(n, int(u_val), im_size)
 	print("start: {}\n\n".format(format(img[0], im_size)[:10]))
 	print("start size: {}".format(img[0].shape))
 	print("\tnet(old): {}".format(net(img)))
 	img_vec = improve(img, net, epochs,lr=lr,verbose=True, show_every=show_every, img_fname=temp_name)
-	for i in range(n):
-		img = format(img_vec[i], im_size)
-		save_img(img, img_filename+'--'+str(i)+'.jpg', im_size)
-		if i == 0:
-			print("new: {}\n\n\n\n\n".format(img[:10]))
-			print("\tnet(new): {}".format(net(img_vec)))
+	name_i = 0
+	vec_i = 0
+	j = n
+	while j > 0:
+		if not os.path.exists(img_filename+'--'+str(name_i)+'.jpg'):
+			img = format(img_vec[vec_i], im_size)
+			save_img(img, img_filename+'--'+str(name_i)+'.jpg', im_size)
+			j -= 1
+			vec_i += 1
+		name_i += 1
+	print("new: {}\n\n\n\n\n".format(img[:10]))
+	print("\tnet(new): {}".format(net(img_vec)))
 	# return img
 
 
