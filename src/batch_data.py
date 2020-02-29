@@ -23,11 +23,11 @@ def batch(data, batch_size):
 	if batch_size%2:
 		batch_size += 1
 	batches = []
-	batch_n = len(pos_feats)//(batch_size//2) + len(neg_feats) // (batch_size//2)
+	batch_n = min(len(pos_feats)//(batch_size//2), len(neg_feats) // (batch_size//2))
 	for batch_i in range(batch_n):
 		batch_features, batch_labels = [None]*batch_size, [None]*batch_size
 		batch_indices = torch.randperm(batch_size).tolist()
-		for _ in range(batch_size//2):
+		while batch_indices:
 			# which pos/neg features to pop
 			pi = random.randint(0, len(pos_feats)-1)
 			ni = random.randint(0, len(neg_feats)-1)
