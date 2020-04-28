@@ -18,11 +18,11 @@ start_img_fn = "lambda n, u_val, im_size : uniform(n, u_val, im_size)"
 # from src.image_functions import get_image_vec
 # start_img_fn = "lambda n, u_val, im_size : torch.stack([get_image_vec('valley.jpg', im_size) for _ in range(n)])"
 
-def main(net_filename='net-sunset.pickle',
+def main(net_filename='nets/net-sunset.pickle',
 		img_filename=None,
 		u_val=127,
 		start_img_fn=start_img_fn,
-		n=10,
+		n=1,
 		show_every=10,
 		im_size = (256, 256),
 		epochs=10000,
