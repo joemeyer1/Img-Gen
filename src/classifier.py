@@ -3,12 +3,13 @@
 from torch import nn, flatten
 
 class Classifier(nn.Module):
-	def __init__(self):
+	def __init__(self, size=256):
 		super(Classifier, self).__init__()
 
 		self.net = nn.Sequential(
-			LinearBlock(3*256*256, 256),
+			LinearBlock(3*size**2, 256),
 			# LinearBlock(256, 64),
+			LinearBlock(256, 256),
 			LinearBlock(256, 256),
 			# LinearBlock(256, 64),
 			# LinearBlock(128, 64),
