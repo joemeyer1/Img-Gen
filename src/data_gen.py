@@ -39,12 +39,12 @@ def get_neg_images(n, img_size=(256,256)):
 	return images*max(1, n//len(images))
 
 
-def get_pos_images(n, dir_name='src/sunsets', img_size=(256,256)):
+def get_pos_images(n, dir_name='img_data', img_size=(256,256)):
 	return get_image_data(n, dir_name, 1, img_size)
 
 
 
-def get_image_data(n, dir_name='src/sunsets', label=1, img_size=(256,256)):
+def get_image_data(n, dir_name='img_data', label=1, img_size=(256,256)):
 	fnames = os.listdir(dir_name)
 	img_vecs = []
 	while n and fnames:

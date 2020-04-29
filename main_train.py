@@ -18,8 +18,6 @@ def main(save_net_as='net-sunset.pickle', get_net_from=None, n=1000, epochs=1000
 	# pass None for get_net_from to make a new net.
 	save_net_as = 'nets/'+save_net_as
 	global net
-	if img_size == 'hd':
-		img_size = (1024, 1024)
 	net = train_img_net(save_net_as, get_net_from, n, epochs, batch_size, img_size, lr)
 
 def train_img_net(save_net_as='net-sunset.pickle', get_net_from='net-sunset.pickle', n=1000, epochs=1000, batch_size=100, img_size=(256, 256), lr=.0001):
