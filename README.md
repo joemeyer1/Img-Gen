@@ -20,6 +20,8 @@ Image generation in this project consists of 2 steps:
 
 `src/train.py` : The actual training code wrapped by `main_train.py`
 
+`src/improve_img.py` : The code wrapped by `main_run.py` that iteratively improves image
+
 
 ## Instructions
 
