@@ -11,20 +11,20 @@ from PIL import Image
 from src.improve_img import improve
 from src.data_gen import get_image_vec
 
-start_img_fn = "lambda n, u_val, im_size : uniform(n, u_val, im_size)"
+start_img_fn = "lambda n, u_val, img_size : uniform(n, u_val, img_size)"
 # start_img_fn = "lambda n, u_val : random_im(n)"
 # start_img_fn = "lambda n, u_val : get_image_vecs()"
 
 # from src.image_functions import get_image_vec
-# start_img_fn = "lambda n, u_val, im_size : torch.stack([get_image_vec('valley.jpg', im_size) for _ in range(n)])"
+# start_img_fn = "lambda n, u_val, img_size : torch.stack([get_image_vec('valley.jpg', img_size) for _ in range(n)])"
 
-def main(net_filename='nets/net-sunset.pickle',
+def main(net_filename='nets/net.pickle',
 		img_filename=None,
 		u_val=127,
 		start_img_fn=start_img_fn,
 		n=1,
 		show_every=10,
-		im_size = (256, 256),
+		img_size = (256, 256),
 		epochs=10000,
 		lr=10,
 		temp_name='temp'):
@@ -36,8 +36,8 @@ def main(net_filename='nets/net-sunset.pickle',
 	# get fn from start img str
 	start_img_fn = eval(start_img_fn)
 	# get start img
-	img = start_img_fn(n, int(u_val), im_size)
-	print("start: {}\n\n".format(format(img[0], im_size)[:10]))
+	img = start_img_fn(n, int(u_val), img_size)
+	print("start: {}\n\n".format(format(img[0], img_size)[:10]))
 	print("start size: {}".format(img[0].shape))
 	print("\tnet(old): {}".format(net(img)))
 	img_vec = improve(img, net, epochs,lr=lr,verbose=True, show_every=show_every, img_fname=temp_name)
@@ -46,8 +46,8 @@ def main(net_filename='nets/net-sunset.pickle',
 	j = n
 	while j > 0:
 		if not os.path.exists(img_filename+'--'+str(name_i)+'.jpg'):
-			img = format(img_vec[vec_i], im_size)
-			save_img(img, img_filename+'--'+str(name_i)+'.jpg', im_size)
+			img = format(img_vec[vec_i], img_size)
+			save_img(img, img_filename+'--'+str(name_i)+'.jpg', img_size)
 			j -= 1
 			vec_i += 1
 		name_i += 1
